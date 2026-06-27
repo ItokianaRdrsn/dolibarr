@@ -17,7 +17,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un utilisateur par ID
-GET {{baseUrl}}/users/1
+GET {{baseUrl}}/users/2
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
@@ -35,7 +35,8 @@ DOLAPIKEY: {{apiKey}}
   "email": "jean.dupont@entreprise.com",
   "password": "monMotDePasse123",
   "phone": "0612345678",
-  "statut": 1
+  "statut": 1,
+  "gender":"man"
 }
 
 ### Modifier un utilisateur
@@ -46,7 +47,8 @@ DOLAPIKEY: {{apiKey}}
 
 {
   "firstname": "Jean-Pierre",
-  "phone": "0698765432"
+  "phone": "0698765432",
+  "gender":"man"
 }
 
 ### Supprimer un utilisateur
@@ -83,8 +85,8 @@ DOLAPIKEY: {{apiKey}}
   "zipcode": "75001",
   "town": "Paris",
   "country": "FR",
-  "customer": 1,
-  "supplier": 0,
+  "customer": 0,
+  "supplier": 1,
   "status": 1
 }
 
@@ -161,7 +163,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un salaire par ID
-GET {{baseUrl}}/salaries/1
+GET {{baseUrl}}/salaries/2
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
@@ -173,15 +175,17 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-  "user_id": 2,
+  "fk_user": 1,
+  "user":1,
+  "label": "Salaire juin 2024",
   "month": 6,
   "year": 2024,
   "amount": 2500.00,
-  "payment_date": "2024-06-30",
+  "datesp": "2024-06-30",
+  "dateep": "2024-06-01",
   "payment_method": "virement",
   "comment": "Salaire juin 2024"
 }
-
 ### Modifier un salaire
 PUT {{baseUrl}}/salaries/1
 Content-Type: application/json
