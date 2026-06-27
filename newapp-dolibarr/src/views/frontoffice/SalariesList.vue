@@ -8,11 +8,11 @@ const employes = ref([])   // vient de GET /users
 const loading = ref(false)
 
 // ===== Champs de recherche (un v-model par champ, tout simple) =====
-const rechercheEmploye = ref('')        // filtre sur fk_user
-const rechercheDateDebutPeriode = ref('') // filtre sur datesp
-const rechercheDateFinPeriode = ref('')   // filtre sur dateep
-const rechercheDateDebutPaiement = ref('') // filtre sur les paiements (datep)
-const rechercheDateFinPaiement = ref('')   // filtre sur les paiements (datep)
+const rechercheEmploye = ref('')
+const rechercheDateDebutPeriode = ref('')
+const rechercheDateFinPeriode = ref('')
+const rechercheDateDebutPaiement = ref('')
+const rechercheDateFinPaiement = ref('')
 const rechercheMontantMin = ref('')
 const rechercheMontantMax = ref('')
 
@@ -22,36 +22,53 @@ function nomEmploye(idUser) {
   return u ? `${u.firstname || ''} ${u.lastname || ''}`.trim() : idUser
 }
 
-// Met les paiements d'un salaire sous forme de texte lisible "date : montant"
+// Met les paiements d'un salaire sous forme de texte lisible
 function texteDesPaiements(paiements) {
-  return paiements.map((p) => `${p.datep} : ${p.amount}`).join(' | ')
+  return paiements
+    .map((p) => `${formatDate(p.datep)} : ${p.amount}`)
+    .join(' | ')
 }
 
-// Chargement initial : employés, salaires, et paiements de chaque salaire
+function formatDate(timestamp) {
+  if (!timestamp) return ''
+
+  return new Date(timestamp * 1000).toISOString().split('T')[0]
+}
+
+// Chargement initial
 async function chargerDonnees() {
   loading.value = true
 
-  const resUsers = await apiClient.get('/users', { params: { limit: 0 } })
-  employes.value = resUsers.data
+  const reponseEmployes = await apiClient.get('/users', {
+    params: { limit: 0 },
+  })
+  employes.value = reponseEmployes.data
 
-  const resSalaries = await apiClient.get('/salaries', { params: { limit: 0 } })
+  const reponseSalaires = await apiClient.get('/salaries', {
+    params: { limit: 0 },
+  })
 
-  // Pour chaque salaire, on récupère aussi ses paiements (table llx_payment_salary)
-  const lignes = []
-  for (const s of resSalaries.data) {
-    const resPaiements = await apiClient.get(`/salaries/${s.id}/payments`)
-    lignes.push({
-      id_employe: s.fk_user,
-      ref_salaire: s.ref || s.id,
-      ref_employe: nomEmploye(s.fk_user),
-      date_debut: s.datesp,
-      date_fin: s.dateep,
-      montant: s.amount,
-      paiements: resPaiements.data,             // liste brute, utilisée pour filtrer
-      paiement: texteDesPaiements(resPaiements.data), // texte affiché dans le tableau
-    })
-  }
-  salaires.value = lignes
+  const reponsePaiements = await apiClient.get('/salaries/payments', {
+    params: { limit: 0 },
+  })
+
+  salaires.value = reponseSalaires.data.map((salaire) => {
+    const paiements = reponsePaiements.data.filter(
+      (paiement) => paiement.fk_salary === salaire.id,
+    )
+
+    return {
+        id_employe: salaire.fk_user,
+        ref_salaire: salaire.ref || salaire.id,
+        ref_employe: employes.value.find(e => String(e.id) === String(salaire.fk_user))?.ref_employee || '',
+        nom_employe: nomEmploye(salaire.fk_user),
+        date_debut: formatDate(salaire.datesp),
+        date_fin: formatDate(salaire.dateep),
+        montant: salaire.amount,
+        paiements,
+        paiement: texteDesPaiements(paiements),
+    }
+  })
 
   loading.value = false
 }
@@ -59,40 +76,49 @@ async function chargerDonnees() {
 // Est-ce qu'au moins un paiement de la ligne tombe dans l'intervalle demandé ?
 function paiementDansIntervalle(paiements) {
   if (!rechercheDateDebutPaiement.value && !rechercheDateFinPaiement.value) {
-    return true // pas de filtre sur la date de paiement
+    return true
   }
+
   return paiements.some((p) => {
     if (rechercheDateDebutPaiement.value && p.datep < rechercheDateDebutPaiement.value) {
       return false
     }
+
     if (rechercheDateFinPaiement.value && p.datep > rechercheDateFinPaiement.value) {
       return false
     }
+
     return true
   })
 }
 
-// ===== Le résultat affiché = la liste complète passée dans un .filter() =====
+// ===== Résultat affiché =====
 const resultats = computed(() => {
   return salaires.value.filter((s) => {
     if (rechercheEmploye.value && String(s.id_employe) !== String(rechercheEmploye.value)) {
       return false
     }
+
     if (rechercheDateDebutPeriode.value && s.date_debut < rechercheDateDebutPeriode.value) {
       return false
     }
+
     if (rechercheDateFinPeriode.value && s.date_fin > rechercheDateFinPeriode.value) {
       return false
     }
+
     if (rechercheMontantMin.value && s.montant < Number(rechercheMontantMin.value)) {
       return false
     }
+
     if (rechercheMontantMax.value && s.montant > Number(rechercheMontantMax.value)) {
       return false
     }
+
     if (!paiementDansIntervalle(s.paiements)) {
       return false
     }
+
     return true
   })
 })
@@ -104,7 +130,6 @@ onMounted(chargerDonnees)
   <div>
     <h1>Liste des salaires</h1>
 
-    <!-- ===== Recherche : juste des v-model, pas de bouton, le filtre se fait en direct ===== -->
     <div>
       <label>Employé :</label>
       <select v-model="rechercheEmploye">
@@ -147,12 +172,12 @@ onMounted(chargerDonnees)
 
     <p v-if="loading">Chargement...</p>
 
-    <!-- ===== Tableau des résultats ===== -->
-    <table v-if="!loading">
+    <table v-if="!loading" border="1">
       <thead>
         <tr>
           <th>ref_salaire</th>
           <th>ref_employe</th>
+          <th>nom_employe</th>
           <th>date_debut</th>
           <th>date_fin</th>
           <th>montant</th>
@@ -163,6 +188,7 @@ onMounted(chargerDonnees)
         <tr v-for="(s, index) in resultats" :key="index">
           <td>{{ s.ref_salaire }}</td>
           <td>{{ s.ref_employe }}</td>
+          <td>{{ s.nom_employe }}</td>
           <td>{{ s.date_debut }}</td>
           <td>{{ s.date_fin }}</td>
           <td>{{ s.montant }}</td>

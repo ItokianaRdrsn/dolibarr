@@ -1,12 +1,12 @@
 ### ========== CONFIGURATION DOLIBARR ==========
 @baseUrl = http://localhost/dolibarr-23.0.3/htdocs/api/index.php
-@apiKey = cRnApnw0b0FrTm9976J80l8HdQsXMPM7
+@apiKey = P26THc41tvb2BNbApDHFiuIL418o33va
 
 ### ========== 1. TEST DE L'API ==========
 # Vérifier que l'API est accessible
-GET {{baseUrl}}/status
-Content-Type: application/json
-Accept: application/json
+# GET {{baseUrl}}/status
+# Content-Type: application/json
+# Accept: application/json
 
 ### ========== 2. UTILISATEURS (GRH) ==========
 
@@ -161,7 +161,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un salaire par ID
-GET {{baseUrl}}/salaries/1
+GET {{baseUrl}}/salaries/payments?sqlfilters=(fk_salary:=:3)
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
