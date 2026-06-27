@@ -1,0 +1,330 @@
+### ========== CONFIGURATION DOLIBARR ==========
+@baseUrl = http://localhost/dolibarr-23.0.3/htdocs/api/index.php
+@apiKey = cRnApnw0b0FrTm9976J80l8HdQsXMPM7
+
+### ========== 1. TEST DE L'API ==========
+# Vérifier que l'API est accessible
+GET {{baseUrl}}/status
+Content-Type: application/json
+Accept: application/json
+
+### ========== 2. UTILISATEURS (GRH) ==========
+
+### Récupérer tous les utilisateurs
+GET {{baseUrl}}/users?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer un utilisateur par ID
+GET {{baseUrl}}/users/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Créer un utilisateur
+POST {{baseUrl}}/users
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "login": "jdupont",
+  "firstname": "Jean",
+  "lastname": "Dupont",
+  "email": "jean.dupont@entreprise.com",
+  "password": "monMotDePasse123",
+  "phone": "0612345678",
+  "statut": 1
+}
+
+### Modifier un utilisateur
+PUT {{baseUrl}}/users/2
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "firstname": "Jean-Pierre",
+  "phone": "0698765432"
+}
+
+### Supprimer un utilisateur
+DELETE {{baseUrl}}/users/2
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 3. TIERS (Clients / Fournisseurs / Employés) ==========
+
+### Récupérer tous les tiers
+GET {{baseUrl}}/thirdparties?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer un tiers par ID
+GET {{baseUrl}}/thirdparties/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Créer un tiers (client)
+POST {{baseUrl}}/thirdparties
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "name": "DUPONT Jean",
+  "email": "jean.dupont@entreprise.com",
+  "phone": "0612345678",
+  "address": "10 rue de Paris",
+  "zipcode": "75001",
+  "town": "Paris",
+  "country": "FR",
+  "customer": 1,
+  "supplier": 0,
+  "status": 1
+}
+
+### Modifier un tiers
+PUT {{baseUrl}}/thirdparties/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "name": "DUPONT Jean-Pierre",
+  "phone": "0698765432"
+}
+
+### Supprimer un tiers
+DELETE {{baseUrl}}/thirdparties/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 4. PRODUITS ==========
+
+### Récupérer tous les produits
+GET {{baseUrl}}/products?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer un produit par ID
+GET {{baseUrl}}/products/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Créer un produit
+POST {{baseUrl}}/products
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "ref": "PROD-001",
+  "label": "Ordinateur Dell XPS",
+  "description": "Ordinateur portable haut de gamme",
+  "price": 999.99,
+  "price_ttc": 1199.99,
+  "tva_tx": 20,
+  "status": 1
+}
+
+### Modifier un produit
+PUT {{baseUrl}}/products/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "label": "Ordinateur Dell XPS 13",
+  "price": 1099.99
+}
+
+### Supprimer un produit
+DELETE {{baseUrl}}/products/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 5. SALAIRES (Payroll) ==========
+
+### Récupérer tous les salaires
+GET {{baseUrl}}/salaries?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer un salaire par ID
+GET {{baseUrl}}/salaries/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Créer un salaire
+POST {{baseUrl}}/salaries
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "user_id": 2,
+  "month": 6,
+  "year": 2024,
+  "amount": 2500.00,
+  "payment_date": "2024-06-30",
+  "payment_method": "virement",
+  "comment": "Salaire juin 2024"
+}
+
+### Modifier un salaire
+PUT {{baseUrl}}/salaries/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "amount": 2600.00,
+  "comment": "Salaire juin 2024 - avec prime"
+}
+
+### Supprimer un salaire
+DELETE {{baseUrl}}/salaries/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Statistiques des salaires
+GET {{baseUrl}}/salaries/stats?year=2024
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 6. CONGÉS (Leaves) ==========
+
+### Récupérer tous les congés
+GET {{baseUrl}}/leaves?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer un congé par ID
+GET {{baseUrl}}/leaves/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Créer une demande de congé
+POST {{baseUrl}}/leaves
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "user_id": 2,
+  "date_start": "2024-07-01",
+  "date_end": "2024-07-15",
+  "type": "CP",
+  "reason": "Vacances d'été",
+  "status": 0
+}
+
+### Valider un congé
+POST {{baseUrl}}/leaves/1/validate
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Refuser un congé
+POST {{baseUrl}}/leaves/1/refuse
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Supprimer un congé
+DELETE {{baseUrl}}/leaves/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 7. NOTES DE FRAIS (Expense Reports) ==========
+
+### Récupérer toutes les notes de frais
+GET {{baseUrl}}/expensereports?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer une note de frais par ID
+GET {{baseUrl}}/expensereports/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Créer une note de frais
+POST {{baseUrl}}/expensereports
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+{
+  "user_id": 2,
+  "date": "2024-06-25",
+  "type": "transport",
+  "amount": 45.50,
+  "description": "Train Paris-Lyon",
+  "status": 0
+}
+
+### Valider une note de frais
+POST {{baseUrl}}/expensereports/1/validate
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Supprimer une note de frais
+DELETE {{baseUrl}}/expensereports/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 8. ENTREPÔTS (Stock) ==========
+
+### Récupérer tous les entrepôts
+GET {{baseUrl}}/warehouses
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer le stock d'un produit
+GET {{baseUrl}}/products/1/stock
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer les mouvements de stock
+GET {{baseUrl}}/stock_movements?limit=100
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 9. EXPLORER API (Swagger) ==========
+
+### Récupérer la documentation Swagger
+GET {{baseUrl}}/explorer/swagger.json
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### ========== 10. DASHBOARD / STATISTIQUES ==========
+
+### Dashboard (si disponible)
+GET {{baseUrl}}/dashboard
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}

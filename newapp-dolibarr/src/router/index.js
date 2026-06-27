@@ -4,12 +4,30 @@ const routes = [
   {
     path: '/',
     name: "home",
-    component: () => import('@/views/Home.vue'),
+    component: () => import('@/views/home.vue'),
   },
-   {
+  {
     path: '/backoffice/dashboard',
     name: "backoffice-dashboard",
-    component: () => import('@/views/backoffice/DashboardView.vue'),
+    component: () => import('@/views/backoffice/dashboard.vue'),
+    meta: { requiresBackoffice: true },
+  },
+  {
+    path: '/backoffice/import',
+    name: "backoffice-import",
+    component: () => import('@/views/backoffice/import.vue'),
+    meta: { requiresBackoffice: true },
+  },
+  {
+    path: '/backoffice/login',
+    name: "backoffice-login",
+    component: () => import('@/views/backoffice/login.vue'),
+    meta: { requiresBackoffice: true },
+  },
+  {
+    path: '/backoffice/reset',
+    name: "backoffice-reset",
+    component: () => import('@/views/backoffice/reset.vue'),
     meta: { requiresBackoffice: true },
   },
 ]
