@@ -7,6 +7,11 @@ const routes = [
     component: () => import('@/views/home.vue'),
   },
   {
+    path: '/salaries',
+    name: "frontoffice-salaries",
+    component: () => import('@/views/frontoffice/SalariesList.vue'),
+  },
+  {
     path: '/backoffice/dashboard',
     name: "backoffice-dashboard",
     component: () => import('@/views/backoffice/dashboard.vue'),
