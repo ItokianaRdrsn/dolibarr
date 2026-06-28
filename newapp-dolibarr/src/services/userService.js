@@ -1,13 +1,10 @@
-import { apiClient } from '@/api/axios'
+import { getUsers } from '@/services/front-dolibarr/users'
 
 // ========== SERVICE "USERS" (EMPLOYÉS) ==========
 
 async function listerEmployes() {
-  const reponse = await apiClient.get('/users', {
-    params: { limit: 0 },
-  })
-
-  return reponse.data
+  const employes = await getUsers({ limit: 0 })
+  return employes
 }
 
 async function listerEmployesAvecRef() {

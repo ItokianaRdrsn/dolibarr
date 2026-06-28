@@ -168,20 +168,23 @@ Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
-### Créer un paiement d'un salaire
-POST {{baseUrl}}/salaries/3/payments
+### Créer un salaire
+POST {{baseUrl}}/salaries
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-    "paiementtype": "VIR",
-    "datepaye": "2026-06-10",
-    "chid": "TEST002",
-    "amounts": {
-        "3": 225.05
-    },
-    "accountid": 1
+  "fk_user": 5,
+  "user":1,
+  "label": "Salaire juin 2024",
+  "month": 6,
+  "year": 2024,
+  "amount": 66000.00,
+  "datesp": "2024-06-30",
+  "dateep": "2024-06-01",
+  "payment_method": "virement",
+  "comment": "Salaire juin 2024"
 }
 ### Créer un paiement pour un salaire
 POST {{baseUrl}}/salaries/1/payments
@@ -189,8 +192,6 @@ Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
 DOLAPIKEY: {{apiKey}}
-
-
 
   {
     "paiementtype": "VIR",
@@ -201,8 +202,6 @@ DOLAPIKEY: {{apiKey}}
     },
     "accountid": 1
   }
-
-
 
 ### Modifier un salaire
 PUT {{baseUrl}}/salaries/1

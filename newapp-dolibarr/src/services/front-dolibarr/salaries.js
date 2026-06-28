@@ -1,14 +1,22 @@
-import {apiClient} from '@/api/axios'
+﻿import { apiClient } from '@/api/axios'
 
 // Récupérer les salaires
-export const getSalaries = async () => {
-  const response = await apiClient.get('/salaries', { params: { limit: 500, page: 0 } })
+export const getSalaries = async (params = { limit: 500, page: 0 }) => {
+  const response = await apiClient.get('/salaries', { params })
   return response.data
 }
 
-export const getSalariesPaiements = async () => {
-  const response = await apiClient.get('/salaries/payments', { params: { limit: 500, page: 0 } })
+export const getSalariesPaiements = async (params = { limit: 500, page: 0 }) => {
+  const response = await apiClient.get('/salaries/payments', { params })
   return response.data
+}
+
+export const postSalary = async (body) => {
+  return apiClient.post('/salaries', body)
+}
+
+export const postSalaryPayment = async (salaireId, body) => {
+  return apiClient.post(`/salaries/${salaireId}/payments`, body)
 }
 
 // Récupérer un utilisateur par ID (pour le genre)
