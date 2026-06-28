@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { apiClient } from '@/api/axios'
+import userService from '@/services/userService'
+import salaireService from '@/services/salaireService'
 
 const employes = ref([])
 
@@ -11,32 +12,17 @@ const dateFin = ref('')
 const montant = ref('')
 
 async function chargerEmployes() {
-  const reponseEmployes = await apiClient.get('/users', {
-    params: { limit: 0 },
-  })
-
-  employes.value = reponseEmployes.data.filter(
-    (e) => e.ref_employee,
-  )
+  employes.value = await userService.listerEmployesAvecRef()
 }
 
 async function creerSalaire() {
   try {
-    const employe = employes.value.find(
-      (e) => e.ref_employee === refEmploye.value,
-    )
-
-    await apiClient.post('/salaries', {
-      fk_user: employe.id,
-      //ref: refSalaire.value,
-      label: 'Salaire',
-      amount: Number(montant.value),
-      salary: Number(montant.value),
-      datesp: dateDebut.value,
-      dateep: dateFin.value,
-      // datesp: Math.floor(new Date(dateDebut.value).getTime() / 1000),
-      // dateep: Math.floor(new Date(dateFin.value).getTime() / 1000),
-      type_payment: 2,
+    await salaireService.creerSalaire({
+      refEmploye: refEmploye.value,
+      employes: employes.value,
+      montant: montant.value,
+      dateDebut: dateDebut.value,
+      dateFin: dateFin.value,
     })
   } catch (erreur) {
     console.log(erreur.response)
