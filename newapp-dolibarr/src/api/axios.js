@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // ========== CONFIGURATION ==========
-const API_BASE_URL = import.meta.env.VITE_DOLIBARR_API_URL || 'http://localhost/dolibarr-23.0.3/htdocs/api/index.php'
+const API_BASE_URL = import.meta.env.VITE_DOLIBARR_API_URL || '/dolibarr-api'
 const API_KEY = import.meta.env.VITE_DOLIBARR_API_KEY || ''
 
 

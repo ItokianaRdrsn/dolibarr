@@ -14,6 +14,7 @@ import { useRouter } from 'vue-router';
     const router = useRouter();
     const login = () => {
         if(mdp.value=="1234"){
+            localStorage.setItem('backoffice_authenticated', 'true');
             router.push('/backoffice/dashboard');
         }
     };

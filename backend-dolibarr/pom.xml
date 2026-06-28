@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.java</groupId>
-	<artifactId>dolibarr</artifactId>
+	<artifactId>backend-dolibarr</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name/>
-	<description/>
+	<name>backend-dolibarr</name>
+	<description>Backend for Dolibarr application</description>
 	<url/>
 	<licenses>
 		<license/>

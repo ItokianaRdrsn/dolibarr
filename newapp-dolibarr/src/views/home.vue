@@ -5,3 +5,6 @@
         <RouterLink to="/backoffice/login">Go to Backoffice Login</RouterLink>
     </div>
 </template>
+<script setup>
+  
+</script>

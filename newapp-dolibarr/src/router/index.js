@@ -32,7 +32,6 @@ const routes = [
     path: '/backoffice/login',
     name: "backoffice-login",
     component: () => import('@/views/backoffice/login.vue'),
-    meta: { requiresBackoffice: true },
   },
   {
     path: '/backoffice/reset',

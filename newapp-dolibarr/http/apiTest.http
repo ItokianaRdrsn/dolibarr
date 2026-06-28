@@ -17,7 +17,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un utilisateur par ID
-GET {{baseUrl}}/users/1
+GET {{baseUrl}}/users/4
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
@@ -29,13 +29,14 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-  "login": "jdupont",
+  "login": "eliot",
   "firstname": "Jean",
   "lastname": "Dupont",
-  "email": "jean.dupont@entreprise.com",
+  "email": "sarah.dllmpont@entreprise.com",
   "password": "monMotDePasse123",
   "phone": "0612345678",
-  "statut": 1
+  "statut": 1,
+  "gender":"man"
 }
 
 ### Modifier un utilisateur
@@ -46,7 +47,8 @@ DOLAPIKEY: {{apiKey}}
 
 {
   "firstname": "Jean-Pierre",
-  "phone": "0698765432"
+  "phone": "0698765432",
+  "gender":"man"
 }
 
 ### Supprimer un utilisateur
@@ -83,8 +85,8 @@ DOLAPIKEY: {{apiKey}}
   "zipcode": "75001",
   "town": "Paris",
   "country": "FR",
-  "customer": 1,
-  "supplier": 0,
+  "customer": 0,
+  "supplier": 1,
   "status": 1
 }
 
@@ -181,6 +183,26 @@ DOLAPIKEY: {{apiKey}}
     },
     "accountid": 1
 }
+### Créer un paiement pour un salaire
+POST {{baseUrl}}/salaries/1/payments
+Content-Type: application/json
+Accept: application/json
+Accept-Encoding: identity
+DOLAPIKEY: {{apiKey}}
+
+
+
+  {
+    "paiementtype": "VIR",
+    "datepaye": "2024-06-30",
+    "chid": "",
+    "amounts": {
+      "1":2600.00
+    },
+    "accountid": 1
+  }
+
+
 
 ### Modifier un salaire
 PUT {{baseUrl}}/salaries/1
