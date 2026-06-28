@@ -17,7 +17,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un utilisateur par ID
-GET {{baseUrl}}/users/2
+GET {{baseUrl}}/users/4
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
@@ -29,10 +29,10 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-  "login": "jdupont",
+  "login": "eliot",
   "firstname": "Jean",
   "lastname": "Dupont",
-  "email": "jean.dupont@entreprise.com",
+  "email": "sarah.dllmpont@entreprise.com",
   "password": "monMotDePasse123",
   "phone": "0612345678",
   "statut": 1,
@@ -163,7 +163,13 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un salaire par ID
-GET {{baseUrl}}/salaries/2
+GET {{baseUrl}}/salaries/1
+Content-Type: application/json
+Accept: application/json
+DOLAPIKEY: {{apiKey}}
+
+### Récupérer un salaire par ID
+GET {{baseUrl}}/salaries/payments
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
@@ -175,17 +181,38 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-  "fk_user": 1,
+  "fk_user": 5,
   "user":1,
   "label": "Salaire juin 2024",
   "month": 6,
   "year": 2024,
-  "amount": 2500.00,
+  "amount": 66000.00,
   "datesp": "2024-06-30",
   "dateep": "2024-06-01",
   "payment_method": "virement",
   "comment": "Salaire juin 2024"
 }
+### Créer un paiement pour un salaire
+POST {{baseUrl}}/salaries/1/payments
+Content-Type: application/json
+Accept: application/json
+Accept-Encoding: identity
+DOLAPIKEY: {{apiKey}}
+
+
+
+  {
+    "paiementtype": "VIR",
+    "datepaye": "2024-06-30",
+    "chid": "",
+    "amounts": {
+      "1":2600.00
+    },
+    "accountid": 1
+  }
+
+
+
 ### Modifier un salaire
 PUT {{baseUrl}}/salaries/1
 Content-Type: application/json

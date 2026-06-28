@@ -22,7 +22,7 @@ export default defineConfig({
       '/dolibarr-api': {
         target: 'http://localhost',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/dolibarr-api/, '/dolibarr/api/index.php'),
+        rewrite: (path) => path.replace(/^\/dolibarr-api/, '/dolibarr-23.0.3/htdocs/api/index.php'),
       },
     },
   },
