@@ -215,7 +215,7 @@ DOLAPIKEY: {{apiKey}}
 }
 
 ### Supprimer un salaire
-DELETE {{baseUrl}}/salaries/1
+DELETE {{baseUrl}}/salaries/3
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}

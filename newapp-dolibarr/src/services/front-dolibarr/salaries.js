@@ -19,6 +19,19 @@ export const postSalaryPayment = async (salaireId, body) => {
   return apiClient.post(`/salaries/${salaireId}/payments`, body)
 }
 
+// IMPORTANT : côté Dolibarr, la route DELETE {id}/payments attend en
+// réalité l'ID DU PAIEMENT lui-même dans {id} (le code fait
+// $paymentsalary->fetch($id)), même si l'URL ressemble à une sous-ressource
+// du salaire. Il faut donc appeler cette route une fois par paiement à
+// supprimer, avec l'id du paiement — jamais l'id du salaire.
+export const deleteSalary = async (id) => {
+  return apiClient.delete(`/salaries/${id}`)
+}
+
+export const deleteSalaryPayment = async (paiementId) => {
+  return apiClient.delete(`/salaries/${paiementId}/payments`)
+}
+
 // Récupérer un utilisateur par ID (pour le genre)
 export const getUser = async (id) => {
   const response = await apiClient.get(`/users/${id}`)
