@@ -161,25 +161,25 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un salaire par ID
-GET {{baseUrl}}/salaries/payments?sqlfilters=(fk_salary:=:3)
+GET {{baseUrl}}/salaries/1
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
-### Créer un salaire
-POST {{baseUrl}}/salaries
+### Créer un paiement d'un salaire
+POST {{baseUrl}}/salaries/3/payments
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-  "user_id": 2,
-  "month": 6,
-  "year": 2024,
-  "amount": 2500.00,
-  "payment_date": "2024-06-30",
-  "payment_method": "virement",
-  "comment": "Salaire juin 2024"
+    "paiementtype": "VIR",
+    "datepaye": "2026-06-10",
+    "chid": "TEST002",
+    "amounts": {
+        "3": 225.05
+    },
+    "accountid": 1
 }
 
 ### Modifier un salaire
