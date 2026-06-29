@@ -17,7 +17,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un utilisateur par ID
-GET {{baseUrl}}/users/9
+GET {{baseUrl}}/users/9/photo
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
