@@ -12,6 +12,11 @@ const routes = [
     component: () => import('@/views/frontoffice/SalariesList.vue'),
   },
   {
+    path: '/salaries/create',
+    name: "frontoffice-salaries-create",
+    component: () => import('@/views/frontoffice/SalariesForm.vue'),
+  },
+  {
     path: '/backoffice/dashboard',
     name: "backoffice-dashboard",
     component: () => import('@/views/backoffice/dashboard.vue'),
@@ -52,4 +57,3 @@ router.beforeEach((to) => {
 })
 
 export default router
-
