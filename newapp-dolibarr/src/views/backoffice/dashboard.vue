@@ -2,6 +2,7 @@
     <div>
         <h1>Welcome to the Backoffice Dashboard</h1>
         <p>This is the backoffice dashboard page.</p>
+        <RouterLink to="/backoffice/import">Go to Import Page</RouterLink>
         
         <!-- Salaires Femmes -->
         <div>

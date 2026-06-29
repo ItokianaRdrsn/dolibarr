@@ -17,7 +17,7 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 ### Récupérer un utilisateur par ID
-GET {{baseUrl}}/users/4
+GET {{baseUrl}}/users/9
 Content-Type: application/json
 Accept: application/json
 DOLAPIKEY: {{apiKey}}
@@ -29,14 +29,16 @@ Accept: application/json
 DOLAPIKEY: {{apiKey}}
 
 {
-  "login": "eliot",
+  "login": "llmma",
   "firstname": "Jean",
   "lastname": "Dupont",
-  "email": "sarah.dllmpont@entreprise.com",
+  "email": "xkceprise.com",
   "password": "monMotDePasse123",
   "phone": "0612345678",
   "statut": 1,
-  "gender":"man"
+  "gender":"man",
+  "ref_employee": 1,
+  "note_private":"Heure/semaine:35h"
 }
 
 ### Modifier un utilisateur
