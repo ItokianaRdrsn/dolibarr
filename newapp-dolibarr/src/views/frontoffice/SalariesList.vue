@@ -1,98 +1,157 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { apiClient } from '@/api/axios'
+import salaireService from '@/services/salaireService'
+import salaireParser from '@/services/salaireParser'
 
-// ===== Données brutes (chargées une seule fois depuis l'API) =====
-const salaires = ref([])   // vient de GET /salaries
-const employes = ref([])   // vient de GET /users
+const salaires = ref([])
+const employes = ref([])
 const loading = ref(false)
 
-// ===== Champs de recherche (un v-model par champ, tout simple) =====
-const rechercheEmploye = ref('')        // filtre sur fk_user
-const rechercheDateDebutPeriode = ref('') // filtre sur datesp
-const rechercheDateFinPeriode = ref('')   // filtre sur dateep
-const rechercheDateDebutPaiement = ref('') // filtre sur les paiements (datep)
-const rechercheDateFinPaiement = ref('')   // filtre sur les paiements (datep)
+// Recherche
+const rechercheEmploye = ref('')
+const rechercheDateDebutPeriode = ref('')
+const rechercheDateFinPeriode = ref('')
+const rechercheDateDebutPaiement = ref('')
+const rechercheDateFinPaiement = ref('')
 const rechercheMontantMin = ref('')
 const rechercheMontantMax = ref('')
 
-// Donne le nom complet d'un employé à partir de son id
-function nomEmploye(idUser) {
-  const u = employes.value.find((e) => String(e.id) === String(idUser))
-  return u ? `${u.firstname || ''} ${u.lastname || ''}`.trim() : idUser
+// Popup
+const afficherPopup = ref(false)
+const salaireSelectionne = ref(null)
+
+const paiement = ref({
+  date: new Date().toISOString().slice(0, 10),
+  montant: 0,
+})
+
+function totalPaye(salaire) {
+  return salaireParser.totalPaye(salaire)
 }
 
-// Met les paiements d'un salaire sous forme de texte lisible "date : montant"
-function texteDesPaiements(paiements) {
-  return paiements.map((p) => `${p.datep} : ${p.amount}`).join(' | ')
+function resteAPayer(salaire) {
+  return salaireParser.resteAPayer(salaire)
 }
 
-// Chargement initial : employés, salaires, et paiements de chaque salaire
 async function chargerDonnees() {
   loading.value = true
 
-  const resUsers = await apiClient.get('/users', { params: { limit: 0 } })
-  employes.value = resUsers.data
+  const { employes: e, salaires: s } = await salaireService.listerSalaires()
 
-  const resSalaries = await apiClient.get('/salaries', { params: { limit: 0 } })
-
-  // Pour chaque salaire, on récupère aussi ses paiements (table llx_payment_salary)
-  const lignes = []
-  for (const s of resSalaries.data) {
-    const resPaiements = await apiClient.get(`/salaries/${s.id}/payments`)
-    lignes.push({
-      id_employe: s.fk_user,
-      ref_salaire: s.ref || s.id,
-      ref_employe: nomEmploye(s.fk_user),
-      date_debut: s.datesp,
-      date_fin: s.dateep,
-      montant: s.amount,
-      paiements: resPaiements.data,             // liste brute, utilisée pour filtrer
-      paiement: texteDesPaiements(resPaiements.data), // texte affiché dans le tableau
-    })
-  }
-  salaires.value = lignes
+  employes.value = e
+  salaires.value = s
 
   loading.value = false
 }
 
-// Est-ce qu'au moins un paiement de la ligne tombe dans l'intervalle demandé ?
-function paiementDansIntervalle(paiements) {
-  if (!rechercheDateDebutPaiement.value && !rechercheDateFinPaiement.value) {
-    return true // pas de filtre sur la date de paiement
+function ouvrirPaiement(salaire) {
+  salaireSelectionne.value = salaire
+
+  paiement.value = {
+    date: new Date().toISOString().slice(0, 10),
+    montant: resteAPayer(salaire)
   }
-  return paiements.some((p) => {
-    if (rechercheDateDebutPaiement.value && p.datep < rechercheDateDebutPaiement.value) {
+
+  afficherPopup.value = true
+}
+
+async function enregistrerPaiement() {
+  try {
+    const r = await salaireService.payerSalaire({
+      salaireId: salaireSelectionne.value.id,
+      date: paiement.value.date,
+      montant: paiement.value.montant,
+    })
+
+    console.log(r.data)
+
+    afficherPopup.value = false
+
+    await chargerDonnees()
+  } catch (e) {
+    console.error(e)
+    console.log("Response :", e.response)
+    console.log("Data :", e.response?.data)
+
+    alert(
+      e.response?.data?.error ||
+      e.response?.data?.message ||
+      JSON.stringify(e.response?.data) ||
+      "Erreur lors du paiement."
+    )
+  }
+}
+
+function paiementDansIntervalle(paiements) {
+  if (
+    !rechercheDateDebutPaiement.value &&
+    !rechercheDateFinPaiement.value
+  ) {
+    return true
+  }
+
+  return paiements.some(p => {
+    const d = salaireParser.formatDate(p.datep)
+
+    if (
+      rechercheDateDebutPaiement.value &&
+      d < rechercheDateDebutPaiement.value
+    ) {
       return false
     }
-    if (rechercheDateFinPaiement.value && p.datep > rechercheDateFinPaiement.value) {
+
+    if (
+      rechercheDateFinPaiement.value &&
+      d > rechercheDateFinPaiement.value
+    ) {
       return false
     }
+
     return true
   })
 }
 
-// ===== Le résultat affiché = la liste complète passée dans un .filter() =====
 const resultats = computed(() => {
-  return salaires.value.filter((s) => {
-    if (rechercheEmploye.value && String(s.id_employe) !== String(rechercheEmploye.value)) {
+  return salaires.value.filter(s => {
+    if (
+      rechercheEmploye.value &&
+      String(s.id_employe) !== String(rechercheEmploye.value)
+    ) {
       return false
     }
-    if (rechercheDateDebutPeriode.value && s.date_debut < rechercheDateDebutPeriode.value) {
+
+    if (
+      rechercheDateDebutPeriode.value &&
+      s.date_debut < rechercheDateDebutPeriode.value
+    ) {
       return false
     }
-    if (rechercheDateFinPeriode.value && s.date_fin > rechercheDateFinPeriode.value) {
+
+    if (
+      rechercheDateFinPeriode.value &&
+      s.date_fin > rechercheDateFinPeriode.value
+    ) {
       return false
     }
-    if (rechercheMontantMin.value && s.montant < Number(rechercheMontantMin.value)) {
+
+    if (
+      rechercheMontantMin.value &&
+      s.montant < Number(rechercheMontantMin.value)
+    ) {
       return false
     }
-    if (rechercheMontantMax.value && s.montant > Number(rechercheMontantMax.value)) {
+
+    if (
+      rechercheMontantMax.value &&
+      s.montant > Number(rechercheMontantMax.value)
+    ) {
       return false
     }
+
     if (!paiementDansIntervalle(s.paiements)) {
       return false
     }
+
     return true
   })
 })
@@ -102,9 +161,8 @@ onMounted(chargerDonnees)
 
 <template>
   <div>
-    <h1>Liste des salaires</h1>
+    <h2>Liste des salaires</h2>
 
-    <!-- ===== Recherche : juste des v-model, pas de bouton, le filtre se fait en direct ===== -->
     <div>
       <label>Employé :</label>
       <select v-model="rechercheEmploye">
@@ -147,30 +205,85 @@ onMounted(chargerDonnees)
 
     <p v-if="loading">Chargement...</p>
 
-    <!-- ===== Tableau des résultats ===== -->
-    <table v-if="!loading">
+    <table border="1">
       <thead>
         <tr>
-          <th>ref_salaire</th>
-          <th>ref_employe</th>
-          <th>date_debut</th>
-          <th>date_fin</th>
-          <th>montant</th>
-          <th>paiement</th>
+          <th>Référence</th>
+          <th>Employé</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Montant</th>
+          <th>Déjà payé</th>
+          <th>Reste</th>
+          <th>Paiements</th>
+          <th>Action</th>
         </tr>
       </thead>
+
       <tbody>
-        <tr v-for="(s, index) in resultats" :key="index">
+        <tr v-for="s in resultats" :key="s.id">
           <td>{{ s.ref_salaire }}</td>
-          <td>{{ s.ref_employe }}</td>
+          <td>{{ s.nom_employe }}</td>
           <td>{{ s.date_debut }}</td>
           <td>{{ s.date_fin }}</td>
           <td>{{ s.montant }}</td>
+          <td>{{ totalPaye(s) }}</td>
+          <td>{{ resteAPayer(s) }}</td>
           <td>{{ s.paiement }}</td>
+          <td>
+            <button v-if="resteAPayer(s) > 0" @click="ouvrirPaiement(s)">
+              Payer
+            </button>
+            <span v-else>
+              ✔ Payé
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
 
-    <p v-if="!loading && !resultats.length">Aucun salaire trouvé.</p>
+    <div v-if="afficherPopup" class="popup">
+      <div class="popup-content">
+        <h3>Nouveau paiement</h3>
+
+        <label>Date</label>
+        <input type="date" v-model="paiement.date" />
+
+        <br><br>
+
+        <label>Montant</label>
+        <input type="number" v-model="paiement.montant" />
+
+        <br><br>
+
+        <button @click="enregistrerPaiement">
+          Valider
+        </button>
+        <button @click="afficherPopup = false">
+          Annuler
+        </button>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.popup {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  width: 350px;
+  border-radius: 6px;
+}
+</style>
