@@ -12,6 +12,16 @@ const routes = [
     component: () => import('@/views/frontoffice/SalariesList.vue'),
   },
   {
+    path: '/employes',
+    name: "frontoffice-employes",
+    component: () => import('@/views/frontoffice/EmployesList.vue'),
+  },
+  {
+    path: '/employes/:id',
+    name: "frontoffice-employe-detail",
+    component: () => import('@/views/frontoffice/EmployeDetail.vue'),
+  },
+  {
     path: '/salaries/create',
     name: "frontoffice-salaries-create",
     component: () => import('@/views/frontoffice/SalariesForm.vue'),

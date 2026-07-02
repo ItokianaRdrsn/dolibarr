@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import salaryService from '@/services/salaryService'
-import salaireParser from '@/services/salaryParser'
+import salaryParser from '@/services/salaryParser'
 
 const salaires = ref([])
 const employes = ref([])
@@ -26,11 +26,11 @@ const paiement = ref({
 })
 
 function totalPaye(salaire) {
-  return salaireParser.totalPaye(salaire)
+  return salaryService.totalPaye(salaire)
 }
 
 function resteAPayer(salaire) {
-  return salaireParser.resteAPayer(salaire)
+  return salaryService.resteAPayer(salaire)
 }
 
 async function chargerDonnees() {
@@ -91,7 +91,7 @@ function paiementDansIntervalle(paiements) {
   }
 
   return paiements.some(p => {
-    const d = salaireParser.formatDate(p.datep)
+    const d = salaryParser.formatDate(p.datep)
 
     if (
       rechercheDateDebutPaiement.value &&

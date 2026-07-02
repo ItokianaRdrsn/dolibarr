@@ -1,6 +1,6 @@
 // ========== SERVICE "PARSER" SALAIRES ==========
-// Tout le formatage / parsing utilisé par les vues SalariesList et SalariesForm.
-// Logique reprise telle quelle, juste déplacée ici.
+// Uniquement du formatage / affichage (dates, libellés, mise en forme d'un salaire).
+// Aucune logique métier ici (total payé, reste à payer -> voir salaryService).
 
 function formatDate(timestamp) {
   if (!timestamp) return ''
@@ -23,25 +23,9 @@ function texteDesPaiements(paiements) {
     .join(' | ')
 }
 
-function totalPaye(salaire) {
-  return salaire.paiements.reduce(
-    (t, p) => t + Number(p.amount),
-    0
-  )
-}
-
-function resteAPayer(salaire) {
-  return Number(salaire.montant) - totalPaye(salaire)
-}
-
-// Transforme un salaire brut (API) + ses paiements bruts (API) + les employés bruts (API)
-// en un salaire "formaté" prêt à être affiché (même structure que dans SalariesList.vue).
-function parseSalaire(salaire, payments, employes) {
-
-  const paiements = payments.filter(
-    p => Number(p.fk_salary) === Number(salaire.id)
-  )
-
+// Construit l'objet "salaire" formaté prêt à être affiché,
+// à partir d'un salaire brut (API), de ses paiements déjà filtrés et des employés bruts (API).
+function formatSalaire(salaire, paiements, employes) {
   return {
 
     id: salaire.id,
@@ -68,20 +52,11 @@ function parseSalaire(salaire, payments, employes) {
     paiement: texteDesPaiements(paiements)
 
   }
-
-}
-
-// Transforme la liste brute des salaires (API) en liste formatée.
-function parseSalaires(salaries, payments, employes) {
-  return salaries.map(salaire => parseSalaire(salaire, payments, employes))
 }
 
 export default {
   formatDate,
   nomEmploye,
   texteDesPaiements,
-  totalPaye,
-  resteAPayer,
-  parseSalaire,
-  parseSalaires,
+  formatSalaire,
 }
