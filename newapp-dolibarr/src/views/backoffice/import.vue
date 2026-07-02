@@ -337,7 +337,8 @@ async function lancerImport() {
         gender: convertirGenre(emp.genre),
         statut: 1,
         employee: 1,
-        note_private: `Heures/semaine:${emp.heure_travail_semaine}`
+        ref_employee: emp.ref_employe,
+        note_private: emp.heure_travail_semaine
       }
 
       let dolibarrId
@@ -389,7 +390,7 @@ async function lancerImport() {
       try {
         const { data } = await apiClient.post('/salaries', {
           fk_user,
-          label: `Salaire ref ${row.ref_salaire}`,
+          label: row.ref_salaire,
           amount: convertirMontant(row.montant),
           datesp: Math.floor(new Date(dateDebut).getTime() / 1000),
           dateep: Math.floor(new Date(dateFin).getTime() / 1000),

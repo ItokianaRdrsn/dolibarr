@@ -19,5 +19,6 @@ export const putUser = async (id, body) => {
 }
 
 export const deleteUser = async (id) => {
+  if(id==1)return
   return apiClient.delete(`/users/${id}`)
 }

@@ -162,6 +162,7 @@ onMounted(chargerDonnees)
 <template>
   <div>
     <h2>Liste des salaires</h2>
+    <RouterLink :to="{ name: 'frontoffice-salaries-create' }">Créer un salaire</RouterLink>
 
     <div>
       <label>Employé :</label>

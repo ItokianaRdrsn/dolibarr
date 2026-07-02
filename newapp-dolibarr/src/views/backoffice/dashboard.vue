@@ -3,6 +3,8 @@
         <h1>Welcome to the Backoffice Dashboard</h1>
         <p>This is the backoffice dashboard page.</p>
         <RouterLink to="/backoffice/import">Go to Import Page</RouterLink>
+        <p></p>
+        <RouterLink :to="{name:'backoffice-reset'}">Go to Reset Page</RouterLink>
         
         <!-- Salaires Femmes -->
         <div>
@@ -30,7 +32,7 @@
         <div>
             <h2>Paiements Salaire par mois</h2>
             
-            <div v-for="(item, month) in salariesPaiementsByMonth" :key="month">
+            <div v-for="(item, month) in salariesByMonth" :key="month">
                 <h3>{{ month }}</h3>
                 <p>Nombre de paiements : {{ item.count }}</p>
                 <p><strong>Total : {{ item.total }} €</strong></p>
@@ -84,6 +86,34 @@ const salariesPaiementsByMonth = computed(() => {
     
     for (const salary of salariesPaiments.value) {
         const date = new Date(salary.datepaye * 1000)
+        date.setDate(1)
+        
+        const key = date.toLocaleDateString('fr-FR', { 
+            month: 'long', 
+            year: 'numeric' 
+        })
+        
+        if (!result[key]) {
+            result[key] = {
+                salaries: [],
+                count: 0,
+                total: 0
+            }
+        }
+        
+        result[key].salaries.push(salary)
+        result[key].count += 1
+        result[key].total += Number(salary.amount || 0)
+    }
+    
+    return result
+})
+// ===== PAIEMENTS PAR MOIS (avec total) =====
+const salariesByMonth = computed(() => {
+    const result = {}
+    
+    for (const salary of salaries.value) {
+        const date = new Date(salary.datesp * 1000)
         date.setDate(1)
         
         const key = date.toLocaleDateString('fr-FR', { 

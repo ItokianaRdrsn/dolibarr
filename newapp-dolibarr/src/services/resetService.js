@@ -95,13 +95,12 @@ async function reinitialiserSalaires() {
 // ref_employee), pour ne jamais toucher à l'utilisateur admin / API.
 async function reinitialiserEmployes() {
   const users = await getUsers({ limit: 0 })
-  const employes = users.filter((u) => u.ref_employee)
 
-  console.log(`[reset] ${employes.length} employé(s) à supprimer`)
+  console.log(`[reset] ${users.length} employé(s) à supprimer`)
 
   const resultats = []
-  for (const employe of employes) {
-    resultats.push(await supprimerUnEmploye(employe))
+  for (const user of users) {
+    resultats.push(await supprimerUnEmploye(user))
   }
 
   return resultats
