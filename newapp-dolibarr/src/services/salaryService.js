@@ -33,11 +33,11 @@ async function listerSalaires() {
   const payments = await getSalariesPaiements({ limit: 0 })
 
   const salaires = salaries.map(salaire => {
-    const paiements = payments.filter(
+    const paiementsParSalaire = payments.filter(
       p => Number(p.fk_salary) === Number(salaire.id)
     )
 
-    return salaryParser.formatSalaire(salaire, paiements, employes)
+    return salaryParser.formatSalaire(salaire, paiementsParSalaire, employes)
   })
 
   return {
@@ -91,5 +91,5 @@ export default {
   payerSalaire,
   totalPaye,
   resteAPayer,
-  ListerSalairesParEmploye
+  ListerSalairesParEmploye,
 }
