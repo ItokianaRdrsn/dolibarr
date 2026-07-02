@@ -335,6 +335,7 @@ async function lancerImport() {
         login: emp.identifiant,
         password: emp.mdp,
         gender: convertirGenre(emp.genre),
+        job: emp.poste,
         statut: 1,
         employee: 1,
         ref_employee: emp.ref_employe,

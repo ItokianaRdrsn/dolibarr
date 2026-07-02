@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import userService from '@/services/userService'
-import salaireService from '@/services/salaireService'
+import salaryService from '@/services/salaryService'
 
 const employes = ref([])
 
@@ -17,7 +17,7 @@ async function chargerEmployes() {
 
 async function creerSalaire() {
   try {
-    await salaireService.creerSalaire({
+    await salaryService.creerSalaire({
       refEmploye: refEmploye.value,
       employes: employes.value,
       montant: montant.value,
