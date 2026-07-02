@@ -1,4 +1,4 @@
-import salaireParser from '@/services/salaireParser'
+import salaireParser from '@/services/salaryParser'
 import userService from '@/services/userService'
 import {
   getSalaries,

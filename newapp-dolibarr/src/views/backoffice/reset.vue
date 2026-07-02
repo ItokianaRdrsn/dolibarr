@@ -7,7 +7,7 @@
             (utilisateurs ayant une référence employé).
         </p>
 
-        <!-- Étape "depart" : bouton de lancement -->
+        <!-- Étape " depart" : bouton de lancement -->
         <div v-if="etape === 'depart'">
             <button @click="etape = 'confirmation'">Réinitialiser les données</button>
         </div>

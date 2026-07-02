@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import salaireService from '@/services/salaireService'
-import salaireParser from '@/services/salaireParser'
+import salaryService from '@/services/salaryService'
+import salaireParser from '@/services/salaryParser'
 
 const salaires = ref([])
 const employes = ref([])
@@ -36,7 +36,7 @@ function resteAPayer(salaire) {
 async function chargerDonnees() {
   loading.value = true
 
-  const { employes: e, salaires: s } = await salaireService.listerSalaires()
+  const { employes: e, salaires: s } = await salaryService.listerSalaires()
 
   employes.value = e
   salaires.value = s
@@ -57,7 +57,7 @@ function ouvrirPaiement(salaire) {
 
 async function enregistrerPaiement() {
   try {
-    const r = await salaireService.payerSalaire({
+    const r = await salaryService.payerSalaire({
       salaireId: salaireSelectionne.value.id,
       date: paiement.value.date,
       montant: paiement.value.montant,
