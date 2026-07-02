@@ -76,6 +76,10 @@ const totalMontant = computed(() =>
   salaires.value.reduce((total, s) => total + Number(s.montant), 0)
 )
 
+const totalPayeGlobal = computed(() =>
+  salaires.value.reduce((total, s) => total + salaryService.totalPaye(s), 0)
+)
+
 const totalResteAPayer = computed(() =>
   salaires.value.reduce((total, s) => total + resteAPayer(s), 0)
 )
@@ -157,7 +161,7 @@ onMounted(chargerDonnees)
           <tr>
             <th colspan="3">Total</th>
             <th>{{ totalMontant }}</th>
-            <th></th>
+            <th>{{ totalPayeGlobal }}</th>
             <th>{{ totalResteAPayer }}</th>
             <th colspan="2"></th>
           </tr>
