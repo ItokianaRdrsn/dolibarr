@@ -4,6 +4,7 @@
         <p>This is the home page of the application.</p>
         <p><RouterLink to="/backoffice/login">Go to Backoffice Login</RouterLink></p>
         <p><RouterLink to="/salaries">Go to Frontoffice</RouterLink></p>
+        <p><RouterLink to="/employes">Liste des salariés</RouterLink></p>
     </div>
 </template>
 <script setup>

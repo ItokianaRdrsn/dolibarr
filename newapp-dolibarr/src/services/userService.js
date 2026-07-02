@@ -1,4 +1,4 @@
-import { getUsers } from '@/services/front-dolibarr/users'
+import { getUsers, getUser } from '@/services/front-dolibarr/users'
 
 // ========== SERVICE "USERS" (EMPLOYÉS) ==========
 
@@ -15,7 +15,13 @@ async function listerEmployesAvecRef() {
   )
 }
 
+// Récupère un seul employé (fiche détaillée) par son id Dolibarr.
+async function getEmploye(id) {
+  return getUser(id)
+}
+
 export default {
   listerEmployes,
   listerEmployesAvecRef,
+  getEmploye,
 }
