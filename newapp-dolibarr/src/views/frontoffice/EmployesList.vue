@@ -7,7 +7,7 @@ const loading = ref(false)
 
 async function chargerDonnees() {
   loading.value = true
-  employes.value = await userService.listerEmployes()
+  employes.value = await userService.listerEmployesAvecRef()
   loading.value = false
 }
 
